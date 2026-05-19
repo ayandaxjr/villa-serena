@@ -1,0 +1,34 @@
+
+> villa-serena@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.29
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/7) ...
+   Generating static pages (1/7) 
+   Generating static pages (3/7) 
+   Generating static pages (5/7) 
+ ✓ Generating static pages (7/7)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    58.1 kB         145 kB
+├ ○ /_not-found                          873 B          88.2 kB
+├ ○ /api/availability                    0 B                0 B
+├ ƒ /api/contact                         0 B                0 B
+└ ƒ /api/inquire                         0 B                0 B
++ First Load JS shared by all            87.3 kB
+  ├ chunks/117-e2b88ffaa7b25ce1.js       31.6 kB
+  ├ chunks/fd9d1056-b11b2651f33aae7f.js  53.6 kB
+  └ other shared chunks (total)          2.09 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

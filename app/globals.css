@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   Villa Serena — Global Styles
+   ========================================= */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-light-cream text-stone_ font-sans;
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide default cursor only for devices with a fine pointer (mouse) */
+  @media (pointer: fine) {
+    body { cursor: none; }
+    *, *::before, *::after { cursor: none !important; }
+  }
+
+  ::selection {
+    background: rgba(184, 151, 90, 0.25);
+    color: #2C2824;
+  }
+}
+
+@layer components {
+  /* Section Label — "01 — Strategy" style */
+  .section-label {
+    @apply text-label uppercase tracking-[0.25em] text-gold font-sans font-medium;
+  }
+
+  /* Gold Decorative Line */
+  .gold-line {
+    @apply w-[60px] h-px bg-gold;
+  }
+
+  /* Highlight Box */
+  .highlight-box {
+    @apply bg-cream border-l-[3px] border-gold py-7 px-8 rounded-r-lg;
+  }
+
+  /* Premium Button — Primary */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-8 py-4 
+           bg-stone_ text-cream text-label uppercase tracking-[0.2em] font-sans font-medium
+           border border-stone_ rounded-none
+           transition-all duration-500 ease-luxury
+           hover:bg-transparent hover:text-stone_;
+  }
+
+  /* Premium Button — Outline */
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-8 py-4 
+           bg-transparent text-cream text-label uppercase tracking-[0.2em] font-sans font-medium
+           border border-cream/40 rounded-none
+           transition-all duration-500 ease-luxury
+           hover:bg-cream/10 hover:border-cream;
+  }
+
+  /* Premium Button — Gold */
+  .btn-gold {
+    @apply inline-flex items-center gap-2 px-10 py-4
+           bg-gold text-stone_ text-label uppercase tracking-[0.2em] font-sans font-medium
+           border border-gold rounded-none
+           transition-all duration-500 ease-luxury
+           hover:bg-transparent hover:text-gold;
+  }
+
+  /* Form Input */
+  .form-input {
+    @apply w-full bg-transparent border-b border-stone_/20 
+           py-4 px-0 text-body font-sans font-light text-stone_
+           placeholder:text-warm-gray/60
+           focus:outline-none focus:border-gold
+           transition-colors duration-500 ease-luxury;
+  }
+
+  /* Card hover lift */
+  .card-lift {
+    @apply transition-all duration-500 ease-luxury
+           hover:-translate-y-1 hover:shadow-lg;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* =========================================
+   Loading Screen
+   ========================================= */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #2C2824;
+}
+
+/* =========================================
+   Custom Scrollbar (for non-hidden areas)
+   ========================================= */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B8975A;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8C8279;
+}
+
+/* =========================================
+   Calendly Embed Overrides
+   ========================================= */
+.calendly-inline-widget {
+  min-width: 320px;
+  height: 700px;
+}
+
+@media (max-width: 768px) {
+  .calendly-inline-widget {
+    height: 600px;
+  }
+}
