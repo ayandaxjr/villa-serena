@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import AnimatedSection from "@/components/AnimatedSection";
 import AvailabilityCalendar, { DateRange } from "@/components/AvailabilityCalendar";
 import { useT, useLanguage } from "@/lib/i18n/LanguageContext";
@@ -24,6 +24,16 @@ export default function BookingSection() {
   const { language } = useLanguage();
 
   const [selectedRange, setSelectedRange] = useState<DateRange | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  // Scroll gently to the form when dates are selected
+  useEffect(() => {
+    if (!selectedRange || !formRef.current) return;
+    const timeout = setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 320); // small delay so the form renders first
+    return () => clearTimeout(timeout);
+  }, [selectedRange]);
 
   // Form fields
   const [name, setName] = useState("");
@@ -115,34 +125,32 @@ export default function BookingSection() {
           </div>
         </AnimatedSection>
 
-        {/* ── Selected range badge ────────────────────────────────────── */}
-        {selectedRange && !success && (
-          <div className="max-w-content mx-auto mb-8 bg-gold/5 border border-gold/20 rounded-xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div>
-              <p className="text-caption text-gold uppercase tracking-widest mb-1">
-                {b.selectedLabel}
-              </p>
-              <p className="font-serif text-body text-stone_ font-light">
-                {formatDate(selectedRange.start, language)}
-                <span className="mx-2 text-gold">→</span>
-                {formatDate(selectedRange.end, language)}
-              </p>
-              <p className="text-caption text-warm-gray mt-0.5">
-                {n} {n === 1 ? b.night : b.nights}
-              </p>
-            </div>
-            <button
-              onClick={() => setSelectedRange(null)}
-              className="text-caption text-warm-gray hover:text-stone_ transition-colors"
-            >
-              {b.clearDates}
-            </button>
-          </div>
-        )}
-
         {/* ── Inquiry form ────────────────────────────────────────────── */}
         {selectedRange && !success && (
-          <div className="max-w-content mx-auto bg-white border border-stone_/8 rounded-2xl p-6 md:p-10">
+          <div ref={formRef} className="max-w-content mx-auto bg-white border border-stone_/8 rounded-2xl p-6 md:p-10 scroll-mt-24">
+            {/* Dates confirmation banner inside form */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-stone_/3 border border-stone_/8 rounded-xl px-5 py-4 mb-8">
+              <div>
+                <p className="text-label uppercase tracking-widest text-gold mb-1">
+                  {b.selectedLabel}
+                </p>
+                <p className="font-serif text-body text-stone_ font-light">
+                  {formatDate(selectedRange.start, language)}
+                  <span className="mx-2 text-gold">→</span>
+                  {formatDate(selectedRange.end, language)}
+                </p>
+                <p className="text-caption text-warm-gray mt-0.5">
+                  {n} {n === 1 ? b.night : b.nights}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedRange(null)}
+                className="text-caption text-warm-gray hover:text-stone_ transition-colors underline underline-offset-2 decoration-warm-gray/40 shrink-0"
+              >
+                {b.clearDates}
+              </button>
+            </div>
+
             <div className="mb-8">
               <h3 className="font-serif text-headline text-stone_ font-light mb-2">
                 {b.formTitle}
