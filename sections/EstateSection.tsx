@@ -109,7 +109,7 @@ export default function EstateSection() {
       {/* ==============================
           SECTION HEADER
           ============================== */}
-      <div className="pt-section pb-12 md:pb-20">
+      <div className="pt-section pb-6 md:pb-10">
         <div className="max-w-wide mx-auto px-6 md:px-10">
           <div className="max-w-content mx-auto text-center">
             <AnimatedSection>
@@ -132,7 +132,7 @@ export default function EstateSection() {
       {/* ==============================
           FEATURE VIDEO — Estate Tour
           ============================== */}
-      <div className="w-full px-6 md:px-10 mb-20 md:mb-32">
+      <div className="w-full px-6 md:px-10 mb-10 md:mb-16">
         <video
           autoPlay
           muted
