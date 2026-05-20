@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://villa-serena-three.vercel.app"),
-  title: "Villa Serena - Estate for 14 | Umbria-Tuscany, Italy",
+  metadataBase: new URL("https://villa-serena-three.vercel.app  title: "Villa Serena - Estate for 14 | Umbria-Tuscany, Italy",
   description:
     "A working Italian estate between Rome and Florence. Three homes, fourteen guests, own olive groves and vineyard. Available May through September.",
   keywords: [
@@ -54,6 +53,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         {/* Structured Data - LodgingBusiness Schema */}
+      {/* Structured Data — LodgingBusiness Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

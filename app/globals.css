@@ -19,14 +19,14 @@
   body {
     @apply bg-light-cream text-stone_ font-sans;
     font-weight: 300;
+    cursor: none;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Hide default cursor only for devices with a fine pointer (mouse) */
-  @media (pointer: fine) {
-    body { cursor: none; }
-    *, *::before, *::after { cursor: none !important; }
+  /* Hide default cursor globally for custom cursor */
+  *, *::before, *::after {
+    cursor: none !important;
   }
 
   ::selection {
