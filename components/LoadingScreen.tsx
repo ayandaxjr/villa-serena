@@ -17,10 +17,11 @@ type LoaderPhase = "assets" | "brand";
 
 interface LoadingScreenProps {
   assets: string[];
+  onBeforeExit?: () => void;
   onComplete?: () => void;
 }
 
-export default function LoadingScreen({ assets, onComplete }: LoadingScreenProps) {
+export default function LoadingScreen({ assets, onBeforeExit, onComplete }: LoadingScreenProps) {
   const t = useT();
   const WORDS = t.loading.words;
   const TOTAL_WORDS = WORDS.length;
@@ -75,11 +76,12 @@ export default function LoadingScreen({ assets, onComplete }: LoadingScreenProps
   useEffect(() => {
     if (phase !== "brand" || !sequenceDone) return;
     const timer = setTimeout(() => {
+      onBeforeExit?.();
       setIsVisible(false);
       setTimeout(() => onComplete?.(), EXIT_DURATION);
     }, EXIT_DELAY);
     return () => clearTimeout(timer);
-  }, [phase, sequenceDone, onComplete]);
+  }, [phase, sequenceDone, onBeforeExit, onComplete]);
 
   const wordOpacity = wordPhase === "out" ? 0 : 1;
   const wordY = wordPhase === "in" ? 12 : wordPhase === "out" ? -8 : 0;
@@ -89,10 +91,10 @@ export default function LoadingScreen({ assets, onComplete }: LoadingScreenProps
       {isVisible && (
         <motion.div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-stone_"
-          exit={{ y: "-100%" }}
+          exit={{ opacity: 0 }}
           transition={{
             duration: EXIT_DURATION / 1000,
-            ease: [0.76, 0, 0.24, 1],
+            ease: [0.25, 0.1, 0.25, 1],
           }}
         >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(184,151,90,0.05)_0%,transparent_60%)]" />

@@ -29,6 +29,30 @@
     inset: 0;
   }
 
+  /* Never flash footer or lower sections during initial load */
+  html.site-loading:not(.site-revealing) #site-content {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  html.site-loading.site-revealing body {
+    position: fixed;
+    width: 100%;
+    inset: 0;
+  }
+
+  #site-content {
+    transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  html.site-revealing #site-content,
+  html.site-ready #site-content {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   body {
     @apply bg-light-cream text-stone_ font-sans;
     font-weight: 300;

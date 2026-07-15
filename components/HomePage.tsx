@@ -39,58 +39,69 @@ function setSiteLoading(active: boolean) {
   }
 }
 
+function revealSiteContent() {
+  scrollToTop();
+  document.documentElement.classList.add("site-revealing");
+}
+
+function finishSiteReveal() {
+  scrollToTop();
+  document.documentElement.classList.remove("site-loading", "site-revealing");
+  document.documentElement.classList.add("site-ready");
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+}
+
 export default function HomePage({ content }: { content: SiteContent }) {
   const [loaderDone, setLoaderDone] = useState(false);
+  const [siteRevealed, setSiteRevealed] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   const preloadAssets = useMemo(() => collectHomePreloadUrls(content), [content]);
 
   useLayoutEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    document.documentElement.classList.remove("site-ready", "site-revealing");
     setSiteLoading(true);
     scrollToTop();
   }, []);
 
-  const releaseScrollLock = useCallback(() => {
+  /** Scroll locked at top; hero fades in underneath while loader dissolves */
+  const handleBeforeLoaderExit = useCallback(() => {
     scrollToTop();
-    requestAnimationFrame(() => {
-      scrollToTop();
-      requestAnimationFrame(() => {
-        scrollToTop();
-        setSiteLoading(false);
-        setLoaderDone(true);
-      });
-    });
+    setLoaderDone(true);
+    revealSiteContent();
+    setSiteRevealed(true);
   }, []);
 
   const handleLoaderComplete = useCallback(() => {
-    scrollToTop();
-    releaseScrollLock();
-  }, [releaseScrollLock]);
+    finishSiteReveal();
+  }, []);
 
   return (
     <LanguageProvider>
       <ContentProvider content={content}>
-        <LoadingScreen assets={preloadAssets} onComplete={handleLoaderComplete} />
-        <CustomCursor />
-        <Navbar />
-        <main
-          ref={mainRef}
-          aria-hidden={!loaderDone}
-          style={{
-            pointerEvents: loaderDone ? "auto" : "none",
-          }}
-        >
-          <HeroSection loaderDone={loaderDone} />
-          <PromiseSection />
-          <EstateSection />
-          <WineSection />
-          <LandSection />
-          <LocationSection />
-          <SeasonsSection />
-          <BookingSection />
-          <ContactSection />
-        </main>
-        <Footer />
+        <LoadingScreen
+          assets={preloadAssets}
+          onBeforeExit={handleBeforeLoaderExit}
+          onComplete={handleLoaderComplete}
+        />
+
+        <div id="site-content" aria-hidden={!siteRevealed}>
+          <CustomCursor />
+          <Navbar />
+          <main ref={mainRef} style={{ pointerEvents: siteRevealed ? "auto" : "none" }}>
+            <HeroSection loaderDone={loaderDone} />
+            <PromiseSection />
+            <EstateSection />
+            <WineSection />
+            <LandSection />
+            <LocationSection />
+            <SeasonsSection />
+            <BookingSection />
+            <ContactSection />
+          </main>
+          <Footer />
+        </div>
       </ContentProvider>
     </LanguageProvider>
   );
