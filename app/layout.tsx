@@ -25,10 +25,11 @@ export const metadata: Metadata = {
     siteName: "Villa Serena",
     images: [
       {
-        url: "/villa sunset.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Villa Serena at golden hour - a private Italian estate in Umbria",
+        type: "image/jpeg",
       },
     ],
   },
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     title: "Villa Serena - A Private Italian Estate",
     description:
       "A working Italian estate between Rome and Florence. Three homes, fourteen guests, own olive groves and vineyard.",
-    images: ["/villa sunset.jpg"],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
