@@ -6,9 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "upload-photos": "node scripts/upload-photos-to-supabase.mjs",
+    "upload-photos:dry-run": "node scripts/upload-photos-to-supabase.mjs --dry-run",
+    "compress-photos": "node scripts/compress-homepage-photos.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.47.10",
     "framer-motion": "^11.18.2",
     "next": "14.2.29",
     "react": "^18.3.1",
@@ -25,6 +30,7 @@
     "fluent-ffmpeg": "^2.1.3",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "ws": "^8.21.1"
   }
 }

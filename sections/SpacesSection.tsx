@@ -3,6 +3,7 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { StaggerContainer, StaggerItem } from "@/components/AnimatedSection";
 import { useT } from "@/lib/i18n/LanguageContext";
+import { useSiteContent } from "@/lib/i18n/ContentContext";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -23,7 +24,15 @@ function CountUp({ target, inView }: { target: number; inView: boolean }) {
 
 export default function SpacesSection() {
   const t = useT();
+  const c = useSiteContent();
   const [numRef, numInView] = useInView({ triggerOnce: true, threshold: 0.5 });
+
+  // Merge CMS content into spaces data
+  const spacesData = [
+    { name: c.spaces_house_1_name || t.spaces.spaces[0].name, description: c.spaces_house_1_desc || t.spaces.spaces[0].description, image: c.spaces_house_1_image || '/villa main interior.jpg' },
+    { name: c.spaces_house_2_name || t.spaces.spaces[1].name, description: c.spaces_house_2_desc || t.spaces.spaces[1].description, image: c.spaces_house_2_image || '/bed apatment.jpg' },
+    { name: c.spaces_house_3_name || t.spaces.spaces[2].name, description: c.spaces_house_3_desc || t.spaces.spaces[2].description, image: c.spaces_house_3_image || '/villa couche.jpg' },
+  ];
 
   return (
     <section id="spaces" className="py-section bg-light-cream">
@@ -35,7 +44,7 @@ export default function SpacesSection() {
           </AnimatedSection>
           <AnimatedSection delay={0.15}>
             <h2 className="font-serif text-display text-stone_ font-light text-balance">
-              {t.spaces.headline}
+              {c.spaces_headline || t.spaces.headline}
             </h2>
           </AnimatedSection>
         </div>
@@ -67,33 +76,27 @@ export default function SpacesSection() {
           className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10"
           staggerDelay={0.2}
         >
-          {t.spaces.spaces.map((space, i) => (
+          {spacesData.map((space, i) => (
             <StaggerItem key={space.name}>
               <div className="group card-lift bg-white border border-stone_/8 p-8 md:p-10 h-full">
                 <div className="aspect-[4/3] mb-8 overflow-hidden rounded-lg">
                   <img
-                    src={["/villa main interior.jpg", "/bed apatment.jpg", "/villa couche.jpg"][i]}
+                    src={space.image}
                     alt={space.name}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.02]"
                   />
                 </div>
-
-                {/* Capacity */}
                 <div className="flex items-baseline gap-3 mb-4">
                   <CountUp target={capacities[i]} inView={numInView} />
                   <span className="text-label uppercase tracking-[0.15em] text-warm-gray">
                     {t.spaces.guestsLower}
                   </span>
                 </div>
-
-                {/* Name */}
                 <h3 className="font-serif text-headline text-stone_ font-medium mb-4">
                   {space.name}
                 </h3>
-
-                {/* Description */}
                 <p className="text-body font-light text-stone_/70 leading-relaxed">
                   {space.description}
                 </p>
@@ -105,7 +108,7 @@ export default function SpacesSection() {
         {/* Note */}
         <AnimatedSection delay={0.3} className="mt-12 text-center">
           <p className="text-caption text-warm-gray/60 max-w-lg mx-auto">
-            {t.spaces.note}
+            {c.spaces_note || t.spaces.note}
           </p>
         </AnimatedSection>
       </div>

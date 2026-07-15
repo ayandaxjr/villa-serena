@@ -4,20 +4,7 @@ import { motion } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useT } from "@/lib/i18n/LanguageContext";
-
-/* =========================================================
-   GALLERY DATA — image paths from /public/ folder
-   ========================================================= */
-const gallerySources = [
-  "/villa outside.jpg",
-  "/villa sun.jpg",
-  "/pool side 2.jpg",
-  "/villa living room.jpg",
-  "/villa kitchen.jpg",
-  "/villa main bed.jpg",
-  "/villa bath clean.jpg",
-  "/villa night.jpg",
-];
+import { useSiteContent } from "@/lib/i18n/ContentContext";
 
 /* =========================================================
    GALLERY SECTION
@@ -27,12 +14,24 @@ const gallerySources = [
    ========================================================= */
 export default function GallerySection() {
   const t = useT();
+  const c = useSiteContent();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [visibleProgress, setVisibleProgress] = useState("01");
   const [progressPct, setProgressPct] = useState(0);
+
+  const gallerySources = [
+    c.gallery_image_1 || "/villa outside.jpg",
+    c.gallery_image_2 || "/villa sun.jpg",
+    c.gallery_image_3 || "/pool side 2.jpg",
+    c.gallery_image_4 || "/villa living room.jpg",
+    c.gallery_image_5 || "/villa kitchen.jpg",
+    c.gallery_image_6 || "/villa main bed.jpg",
+    c.gallery_image_7 || "/villa bath clean.jpg",
+    c.gallery_image_8 || "/villa night.jpg",
+  ];
 
   const galleryItems = gallerySources.map((src, i) => ({
     id: i + 1,

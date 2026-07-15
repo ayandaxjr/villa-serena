@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://villa-serena-three.vercel.app  title: "Villa Serena - Estate for 14 | Umbria-Tuscany, Italy",
+  metadataBase: new URL("https://www.villaserena.nl"),
+  title: "Villa Serena - Estate for 14 | Umbria-Tuscany, Italy",
   description:
     "A working Italian estate between Rome and Florence. Three homes, fourteen guests, own olive groves and vineyard. Available May through September.",
   keywords: [
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
       "A working Italian estate between Rome and Florence. Three homes, fourteen guests, own olive groves and vineyard.",
     type: "website",
     locale: "en_US",
-    url: "https://villa-serena.nl",
+    url: "https://www.villaserena.nl",
     siteName: "Villa Serena",
     images: [
       {
@@ -52,8 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Structured Data - LodgingBusiness Schema */}
-      {/* Structured Data — LodgingBusiness Schema */}
+        {/* Structured Data — LodgingBusiness Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -63,7 +63,7 @@ export default function RootLayout({
               name: "Villa Serena",
               description:
                 "A working Italian estate between Rome and Florence. Three homes, fourteen guests, own olive groves and vineyard.",
-              url: "https://villa-serena.nl",
+              url: "https://www.villaserena.nl",
               // REPLACE: Add actual address
               address: {
                 "@type": "PostalAddress",

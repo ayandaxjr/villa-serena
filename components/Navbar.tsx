@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useLanguage, languageLabels, type Language } from "@/lib/i18n/LanguageContext";
+import { useSiteContent } from "@/lib/i18n/ContentContext";
+import { useCmsText } from "@/lib/i18n/useCmsText";
 
 const langs: Language[] = ["en", "nl", "it"];
 
@@ -11,6 +13,8 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const bgOpacity = useTransform(scrollY, [0, 100], [0, 0.95]);
   const { language, setLanguage, t } = useLanguage();
+  const c = useSiteContent();
+  const cmsText = useCmsText();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +50,7 @@ export default function Navbar() {
           onClick={() => scrollToSection("hero")}
           className="font-serif text-cream text-xl md:text-2xl font-light tracking-tight cursor-hover"
         >
-          {t.nav.logo}
+          {cmsText(c.nav_logo, t.nav.logo)}
         </button>
 
         {/* Right side: Language Switcher + CTA */}
@@ -77,7 +81,7 @@ export default function Navbar() {
             className="text-label uppercase tracking-[0.2em] text-gold hover:text-cream 
                        transition-colors duration-500 ease-luxury cursor-hover"
           >
-            {t.nav.cta}
+            {cmsText(c.nav_cta, t.nav.cta)}
           </button>
         </div>
       </div>

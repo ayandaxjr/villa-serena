@@ -3,14 +3,12 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { StaggerContainer, StaggerItem } from "@/components/AnimatedSection";
 import { useT } from "@/lib/i18n/LanguageContext";
+import { useSiteContent } from "@/lib/i18n/ContentContext";
+import { useCmsText } from "@/lib/i18n/useCmsText";
+import { PHOTOS } from "@/lib/site-assets";
+import { resolvePhoto } from "@/lib/resolve-photo";
 
-const seasonImages = [
-  "/villa sun.jpg",
-  "/pool sode top.jpg",
-  "/villa night.jpg",
-];
-
-const seasonTones = [
+const seasonTones  = [
   "from-olive/10 via-cream to-olive/5",
   "from-gold/15 via-cream to-terracotta/5",
   "from-terracotta/10 via-cream to-warm-gray/5",
@@ -18,10 +16,15 @@ const seasonTones = [
 
 export default function SeasonsSection() {
   const t = useT();
+  const c = useSiteContent();
+  const cmsText = useCmsText();
 
+  const cmsDescs = [c.seasons_spring_desc, c.seasons_summer_desc, c.seasons_late_summer_desc];
+  const cmsImages = [c.seasons_image_spring, c.seasons_image_summer, c.seasons_image_late];
   const seasons = t.seasons.seasons.map((s, i) => ({
     ...s,
-    image: seasonImages[i],
+    description: cmsText(cmsDescs[i], s.description),
+    image: resolvePhoto(cmsImages[i], [PHOTOS.seasonSpring, PHOTOS.seasonSummer, PHOTOS.seasonLate][i]),
     tone: seasonTones[i],
   }));
 
@@ -35,7 +38,7 @@ export default function SeasonsSection() {
           </AnimatedSection>
           <AnimatedSection delay={0.15}>
             <h2 className="font-serif text-display text-stone_ font-light text-balance">
-              {t.seasons.headline}
+              {cmsText(c.seasons_headline, t.seasons.headline)}
             </h2>
           </AnimatedSection>
         </div>
@@ -54,7 +57,7 @@ export default function SeasonsSection() {
                   <img
                     src={season.image}
                     alt={season.name}
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -85,7 +88,7 @@ export default function SeasonsSection() {
         {/* Pricing note */}
         <AnimatedSection delay={0.3} className="mt-14 text-center">
           <p className="text-caption text-warm-gray/50 max-w-md mx-auto">
-            {t.seasons.note}
+            {cmsText(c.seasons_note, t.seasons.note)}
           </p>
         </AnimatedSection>
       </div>

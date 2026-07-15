@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useT } from "@/lib/i18n/LanguageContext";
+import { useSiteContent } from "@/lib/i18n/ContentContext";
 
 /* =========================================================
    TYPEFORM-STYLE MULTI-STEP CONTACT FORM — V2 (Improved)
@@ -60,6 +61,8 @@ const slideVariants = {
 
 export default function ContactSection() {
   const t = useT();
+  const c = useSiteContent();
+  const contactEmail = c.contact_email || c.footer_email || 'info@villa-serena.nl';
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -392,8 +395,8 @@ export default function ContactSection() {
               className="text-caption text-terracotta mt-6 sm:mt-8 text-center max-w-md px-4"
             >
               {t.contact.errorText}{" "}
-              <a href="mailto:info@villa-serena.nl" className="text-gold/80 underline underline-offset-4">
-                info@villa-serena.nl
+              <a href={`mailto:${contactEmail}`} className="text-gold/80 underline underline-offset-4">
+                {contactEmail}
               </a>
             </motion.p>
           )}

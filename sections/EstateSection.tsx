@@ -1,41 +1,38 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
-import { useInView } from "react-intersection-observer";
-import AnimatedSection from "@/components/AnimatedSection";
+import { useRef, useState, useEffect, useCallback, type CSSProperties } from "react";
+import AnimatedSection, { StaggerContainer, StaggerItem } from "@/components/AnimatedSection";
 import { useT } from "@/lib/i18n/LanguageContext";
-
-/* =========================================================
-   DATA — Estate carousel card images
-   ========================================================= */
-const estateCardImages = [
-  "/villa outside.jpg",     // The Villa — first
-  "/pool side.jpg",         // Swimming Pool — second
-  "/villa area chill.jpg",  // The Terrace
-  "/vineyard.jpg",          // The Olive Grove
-  "/estate far.jpg",        // The Valley View
-  "/villa driveway.jpg",    // The Stone Courtyard
-  "/villa sun shine.jpg",   // The Vineyard
-];
+import { useSiteContent } from "@/lib/i18n/ContentContext";
+import { useCmsText } from "@/lib/i18n/useCmsText";
+import { PHOTOS } from "@/lib/site-assets";
+import { resolvePhoto } from "@/lib/resolve-photo";
 
 /* =========================================================
    MAIN ESTATE SECTION
    ========================================================= */
 export default function EstateSection() {
   const t = useT();
+  const c = useSiteContent();
+  const cmsText = useCmsText();
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Card images: use CMS values when set, otherwise fall back to hardcoded paths
+  const estateCardImages = [
+    resolvePhoto(c.estate_card_image_1, PHOTOS.estate1),
+    resolvePhoto(c.estate_card_image_2, PHOTOS.estate2),
+    resolvePhoto(c.estate_card_image_3, PHOTOS.estate3),
+    resolvePhoto(c.estate_card_image_4, PHOTOS.estate4),
+    resolvePhoto(c.estate_card_image_5, PHOTOS.estate5),
+    resolvePhoto(c.estate_card_image_6, PHOTOS.estate6),
+    resolvePhoto(c.estate_card_image_7, PHOTOS.estate7),
+  ];
   const [isMobile, setIsMobile] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [visibleProgress, setVisibleProgress] = useState("01");
   const [progressPct, setProgressPct] = useState(0);
-
-  // Feature video in-view detection
-  const [videoRef, videoInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.3,
-  });
 
   const estateCards = t.estate.cards.map((card, i) => ({
     id: i + 1,
@@ -117,32 +114,16 @@ export default function EstateSection() {
             </AnimatedSection>
             <AnimatedSection delay={0.15}>
               <h2 className="font-serif text-display text-stone_ font-light text-balance mb-6">
-                {t.estate.headline}
+                {cmsText(c.estate_headline, t.estate.headline)}
               </h2>
             </AnimatedSection>
             <AnimatedSection delay={0.3}>
               <p className="font-sans text-body-lg text-warm-gray font-light max-w-xl mx-auto leading-relaxed">
-                {t.estate.description}
+                {cmsText(c.estate_description, t.estate.description)}
               </p>
             </AnimatedSection>
           </div>
         </div>
-      </div>
-
-      {/* ==============================
-          FEATURE VIDEO — Estate Tour
-          ============================== */}
-      <div className="w-full px-6 md:px-10 mb-5 md:mb-8">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          style={{ width: "100%", display: "block", borderRadius: "16px" }}
-        >
-          <source src="/video/estate-tour.mp4" type="video/mp4" />
-        </video>
       </div>
 
       {/* ==============================
@@ -204,61 +185,57 @@ export default function EstateSection() {
         </div>
 
         {/* Carousel track */}
-        <div
-          ref={scrollRef}
-          className="estate-track flex gap-4 md:gap-6
-                     snap-x snap-mandatory scrollbar-hide"
-          style={{
-            WebkitOverflowScrolling: "touch",
-            overflowX: isMobile ? "auto" : "hidden",
-            overflowY: "hidden",
-          } as React.CSSProperties}
-        >
-          {estateCards.map((card, idx) => (
-            <div
-              key={card.id}
-              className={`flex-shrink-0 snap-start
-                         w-[85vw] sm:w-[70vw] md:w-[calc((100vw-80px-24px)/2)]
-                         min-w-0 relative group
-                         ${idx === 0 ? 'ml-6 md:ml-10' : ''}
-                         ${idx === estateCards.length - 1 ? 'mr-6 md:mr-10' : ''}`}
-            >
-              <div className="relative overflow-hidden rounded-xl md:rounded-2xl">
-                <div className="aspect-[3/4] relative overflow-hidden bg-stone_/5">
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out
-                               group-hover:scale-105"
-                  />
-
-                  {/* Card number */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="text-[10px] font-sans uppercase tracking-[0.3em] text-cream/60 font-medium
-                                     bg-stone_/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      {String(card.id).padStart(2, "0")}
-                    </span>
+        <AnimatedSection delay={0.1} threshold={0.1}>
+          <StaggerContainer
+            ref={scrollRef}
+            className="estate-track flex gap-4 md:gap-6 snap-x snap-mandatory scrollbar-hide"
+            staggerDelay={0.07}
+            threshold={0.08}
+            style={{
+              WebkitOverflowScrolling: "touch",
+              overflowX: isMobile ? "auto" : "hidden",
+              overflowY: "hidden",
+            } as CSSProperties}
+          >
+            {estateCards.map((card, idx) => (
+              <StaggerItem
+                key={card.id}
+                className={`flex-shrink-0 snap-start
+                           w-[85vw] sm:w-[70vw] md:w-[min(340px,calc((100vw-120px)/2.8))]
+                           min-w-0 relative group
+                           ${idx === 0 ? "ml-6 md:ml-10" : ""}
+                           ${idx === estateCards.length - 1 ? "mr-6 md:mr-10" : ""}`}
+              >
+                <div className="relative overflow-hidden rounded-xl md:rounded-2xl">
+                  <div className="aspect-[3/4] md:aspect-[4/3] relative overflow-hidden bg-stone_/5">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority={idx < 2 ? "high" : "auto"}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="text-[10px] font-sans uppercase tracking-[0.3em] text-cream/60 font-medium bg-stone_/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        {String(card.id).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/[0.06] transition-colors duration-700" />
                   </div>
-
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/[0.06] transition-colors duration-700" />
+                  <div className="absolute bottom-0 inset-x-0 p-5 md:p-6 bg-gradient-to-t from-stone_/80 via-stone_/40 to-transparent">
+                    <h3 className="font-serif text-cream text-lg md:text-xl font-light mb-0.5">
+                      {card.title}
+                    </h3>
+                    <p className="font-sans text-cream/55 text-xs font-light leading-relaxed">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
-
-                {/* Caption overlay */}
-                <div className="absolute bottom-0 inset-x-0 p-5 md:p-6 bg-gradient-to-t from-stone_/80 via-stone_/40 to-transparent">
-                  <h3 className="font-serif text-cream text-lg md:text-xl font-light mb-0.5">
-                    {card.title}
-                  </h3>
-                  <p className="font-sans text-cream/55 text-xs font-light leading-relaxed">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </AnimatedSection>
 
         {/* Instruction hint */}
         <div className="max-w-wide mx-auto px-6 md:px-10 mt-6 md:mt-8">

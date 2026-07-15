@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import AnimatedSection from "@/components/AnimatedSection";
 import AvailabilityCalendar, { DateRange } from "@/components/AvailabilityCalendar";
 import { useT, useLanguage } from "@/lib/i18n/LanguageContext";
+import { useSiteContent } from "@/lib/i18n/ContentContext";
+import { useCmsText } from "@/lib/i18n/useCmsText";
 
 function formatDate(iso: string, lang: string) {
   const d = new Date(iso + "T00:00:00");
@@ -21,6 +23,8 @@ function nights(start: string, end: string) {
 
 export default function BookingSection() {
   const t = useT();
+  const c = useSiteContent();
+  const cmsText = useCmsText();
   const { language } = useLanguage();
 
   const [selectedRange, setSelectedRange] = useState<DateRange | null>(null);
@@ -94,7 +98,7 @@ export default function BookingSection() {
           </AnimatedSection>
           <AnimatedSection delay={0.15}>
             <h2 className="font-serif text-display text-stone_ font-light text-balance mb-6">
-              {b.headline}
+              {cmsText(c.booking_headline, b.headline)}
             </h2>
           </AnimatedSection>
           <AnimatedSection delay={0.3}>
@@ -102,7 +106,7 @@ export default function BookingSection() {
           </AnimatedSection>
           <AnimatedSection delay={0.4}>
             <p className="text-body-lg font-light text-stone_/70 max-w-[560px] mx-auto">
-              {b.description}
+              {cmsText(c.booking_description, b.description)}
             </p>
           </AnimatedSection>
         </div>

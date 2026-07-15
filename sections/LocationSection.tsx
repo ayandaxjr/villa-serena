@@ -2,6 +2,8 @@
 
 import AnimatedSection from "@/components/AnimatedSection";
 import { useT } from "@/lib/i18n/LanguageContext";
+import { useSiteContent } from "@/lib/i18n/ContentContext";
+import { useCmsText } from "@/lib/i18n/useCmsText";
 
 // Villa Serena coordinates — Umbria, near Città della Pieve
 const VILLA_LAT = 43.0055;
@@ -11,6 +13,8 @@ const GOOGLE_MAPS_EMBED = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1
 
 export default function LocationSection() {
   const t = useT();
+  const c = useSiteContent();
+  const cmsText = useCmsText();
 
   return (
     <section id="location" className="py-section bg-light-cream">
@@ -22,7 +26,7 @@ export default function LocationSection() {
           </AnimatedSection>
           <AnimatedSection delay={0.15}>
             <h2 className="font-serif text-display text-stone_ font-light text-balance">
-              {t.location.headline}
+              {cmsText(c.location_headline, t.location.headline)}
             </h2>
           </AnimatedSection>
         </div>
@@ -33,10 +37,10 @@ export default function LocationSection() {
           <AnimatedSection direction="left">
             <div className="max-w-lg">
               <p className="text-body-lg font-light text-stone_/80 leading-relaxed mb-8">
-                {t.location.body1}
+                {cmsText(c.location_body1, t.location.body1)}
               </p>
               <p className="text-body-lg font-light text-stone_/80 leading-relaxed mb-10">
-                {t.location.body2}
+                {cmsText(c.location_body2, t.location.body2)}
               </p>
 
               {/* Distance indicators */}
