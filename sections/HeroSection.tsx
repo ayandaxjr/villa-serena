@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState } from "react";
 import { useT } from "@/lib/i18n/LanguageContext";
 import { useSiteContent } from "@/lib/i18n/ContentContext";
 import { useCmsText } from "@/lib/i18n/useCmsText";
+import { usePersistentVideoAutoplay } from "@/lib/use-persistent-video-autoplay";
 
 interface HeroSectionProps {
   loaderDone?: boolean;
@@ -27,52 +28,12 @@ export default function HeroSection({ loaderDone = false }: HeroSectionProps) {
   const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const textY = useTransform(scrollYProgress, [0, 0.5], ["0%", "20%"]);
 
-  const startHeroVideo = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "");
-    video.setAttribute("webkit-playsinline", "true");
-
-    const attempt = () => {
-      video.play().catch(() => {});
-    };
-
-    attempt();
-    if (video.readyState >= 2) {
-      setVideoReady(true);
-    }
-  }, []);
-
-  // iOS/mobile: autoplay only works once the hero is visible after the loader
-  useEffect(() => {
-    if (!loaderDone) return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    startHeroVideo();
-
-    const onReady = () => setVideoReady(true);
-    video.addEventListener("loadeddata", onReady);
-    video.addEventListener("canplay", onReady);
-    video.addEventListener("playing", onReady);
-
-    const onVis = () => {
-      if (document.visibilityState === "visible") startHeroVideo();
-    };
-    document.addEventListener("visibilitychange", onVis);
-
-    return () => {
-      video.removeEventListener("loadeddata", onReady);
-      video.removeEventListener("canplay", onReady);
-      video.removeEventListener("playing", onReady);
-      document.removeEventListener("visibilitychange", onVis);
-    };
-  }, [loaderDone, startHeroVideo]);
+  // Start during loader; keep alive through iOS Low Power / Android battery saver
+  usePersistentVideoAutoplay(videoRef, {
+    active: true,
+    viewportRef: sectionRef,
+    onPlaying: () => setVideoReady(true),
+  });
 
   const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -90,6 +51,7 @@ export default function HeroSection({ loaderDone = false }: HeroSectionProps) {
           ref={videoRef}
           autoPlay
           muted
+          defaultMuted
           loop
           playsInline
           preload="auto"
@@ -97,6 +59,7 @@ export default function HeroSection({ loaderDone = false }: HeroSectionProps) {
           disablePictureInPicture
           disableRemotePlayback
           controlsList="nodownload noplaybackrate noremoteplayback"
+          onPlaying={() => setVideoReady(true)}
           onCanPlayThrough={() => setVideoReady(true)}
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           style={{ opacity: videoReady ? 1 : 0, transition: "opacity 1.5s ease" }}

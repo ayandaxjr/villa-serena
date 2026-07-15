@@ -77,8 +77,6 @@ export default function HomePage({ content }: { content: SiteContent }) {
           ref={mainRef}
           aria-hidden={!loaderDone}
           style={{
-            opacity: loaderDone ? 1 : 0,
-            transition: "opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
             pointerEvents: loaderDone ? "auto" : "none",
           }}
         >
