@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useLayoutEffect, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { ContentProvider } from "@/lib/i18n/ContentContext";
@@ -22,53 +22,53 @@ const LocationSection = dynamic(() => import("@/sections/LocationSection"));
 const BookingSection  = dynamic(() => import("@/sections/BookingSection"));
 const ContactSection  = dynamic(() => import("@/sections/ContactSection"), { ssr: false });
 
+function scrollToTop() {
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
+
+function setSiteLoading(active: boolean) {
+  document.documentElement.classList.toggle("site-loading", active);
+  if (active) {
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+  }
+}
+
 export default function HomePage({ content }: { content: SiteContent }) {
   const [loaderDone, setLoaderDone] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   const preloadAssets = useMemo(() => collectHomePreloadUrls(content), [content]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    document.documentElement.style.scrollBehavior = "auto";
-    window.scrollTo(0, 0);
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    };
+    setSiteLoading(true);
+    scrollToTop();
   }, []);
 
-  useEffect(() => {
-    if (!loaderDone) return;
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-    const timer = setTimeout(() => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      document.documentElement.style.scrollBehavior = "";
-    }, 600);
-    return () => clearTimeout(timer);
-  }, [loaderDone]);
-
-  const handleLoaderComplete = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+  const releaseScrollLock = useCallback(() => {
+    scrollToTop();
     requestAnimationFrame(() => {
+      scrollToTop();
       requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        scrollToTop();
+        setSiteLoading(false);
         setLoaderDone(true);
       });
     });
   }, []);
 
+  const handleLoaderComplete = useCallback(() => {
+    scrollToTop();
+    releaseScrollLock();
+  }, [releaseScrollLock]);
+
   return (
     <LanguageProvider>
-      {/* ContentProvider makes CMS content available to all sections */}
       <ContentProvider content={content}>
         <LoadingScreen assets={preloadAssets} onComplete={handleLoaderComplete} />
         <CustomCursor />

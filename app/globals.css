@@ -16,6 +16,19 @@
     overflow-x: hidden;
   }
 
+  /* Lock viewport at top while the loading screen is active */
+  html.site-loading,
+  html.site-loading body {
+    overflow: hidden !important;
+    height: 100%;
+  }
+
+  html.site-loading body {
+    position: fixed;
+    width: 100%;
+    inset: 0;
+  }
+
   body {
     @apply bg-light-cream text-stone_ font-sans;
     font-weight: 300;
